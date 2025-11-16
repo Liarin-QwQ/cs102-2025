@@ -12,6 +12,7 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
+    n = int((n ** 2) ** 0.5)
     if n == 1:
         return False
     for i in range(2, n // 2 + 1):
