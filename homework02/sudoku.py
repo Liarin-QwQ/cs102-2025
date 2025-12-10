@@ -1,4 +1,4 @@
-""" Код для работы с судоку"""
+"""Код для работы с судоку"""
 
 import copy
 import math
@@ -18,7 +18,7 @@ def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
 
 
 def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
-    """ создаёт сетку судоку"""
+    """создаёт сетку судоку"""
     digits = [c for c in puzzle if c in "123456789."]
     grid = group(digits, 9)
     return grid
@@ -83,11 +83,11 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     n = len(grid)
     block_size = int(math.sqrt(n))
     start_row, start_col = (pos[0] // block_size) * block_size, (pos[1] // block_size) * block_size
-    return [
-        grid[r][c]
-        for r in range(start_row, start_row + block_size)
-        for c in range(start_col, start_col + block_size)
-    ]
+    block = []
+    for r in range(start_row, start_row + block_size):
+        for c in range(start_col, start_col + block_size):
+            block.append(grid[r][c])
+    return block
 
 
 def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
@@ -99,9 +99,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    empty_positions = [(r, c)
-                       for r, row in enumerate(grid)
-                       for c, col in enumerate(row) if col == "."]
+    empty_positions = [(r, c) for r, row in enumerate(grid) for c, col in enumerate(row) if col == "."]
     return empty_positions[0] if empty_positions else None
 
 
