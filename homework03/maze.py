@@ -19,7 +19,25 @@ def remove_wall(
     :return:
     """
 
-    pass
+    x, y = coord
+    rows = len(grid)
+    cols = len(grid[0])
+
+    directions = []
+
+    if x - 2 > 0:
+        directions.append((-2, 0))
+    if y + 2 < cols - 1:
+        directions.append((0, 2))
+    if not directions:
+        return grid
+
+    dx, dy = random.choice(directions)
+
+    grid[x + dx // 2][y + dy // 2] = " "
+    grid[x + dx][y + dy] = " "
+
+    return grid
 
 
 def bin_tree_maze(
@@ -69,7 +87,14 @@ def get_exits(grid: List[List[Union[str, int]]]) -> List[Tuple[int, int]]:
     :return:
     """
 
-    pass
+    exits = []
+
+    for x, row in enumerate(grid):
+        for y, cell in enumerate(row):
+            if cell == "X":
+                exits.append((x, y))
+
+    return exits
 
 
 def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str, int]]]:
