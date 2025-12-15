@@ -32,7 +32,7 @@ def remove_wall(
     if not directions:
         return grid
 
-    dx, dy = random.choice(directions)
+    dx, dy = choice(directions)
 
     grid[x + dx // 2][y + dy // 2] = " "
     grid[x + dx][y + dy] = " "
@@ -105,7 +105,18 @@ def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str,
     :return:
     """
 
-    pass
+    rows = len(grid)
+    cols = len(grid[0])
+
+    for x in range(rows):
+        for y in range(cols):
+            if grid[x][y] == k:
+                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < rows and 0 <= ny < cols:
+                        if grid[nx][ny] == " " or grid[nx][ny] == 0:
+                            grid[nx][ny] = k + 1
+    return grid
 
 
 def shortest_path(
@@ -117,7 +128,28 @@ def shortest_path(
     :param exit_coord:
     :return:
     """
-    pass
+    x, y = exit_coord
+    if not isinstance(grid[x][y], int) or grid[x][y] == 0:
+        return None
+
+    k = grid[x][y]
+    path = [(x, y)]
+
+    while k > 1:
+        found = False
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
+                if grid[nx][ny] == k - 1:
+                    path.append((nx, ny))
+                    x, y = nx, ny
+                    k -= 1
+                    found = True
+                    break
+        if not found:
+            return None
+
+    return path
 
 
 def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> bool:
@@ -128,7 +160,27 @@ def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) ->
     :return:
     """
 
-    pass
+    x, y = coord
+    rows = len(grid)
+    cols = len(grid[0])
+    walls = 0
+    passages = 0
+
+    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        nx, ny = x + dx, y + dy
+        if nx < 0 or nx >= rows or ny < 0 or ny >= cols:
+            walls += 1
+        elif grid[nx][ny] != " ":
+            walls += 1
+        else:
+            passages += 1
+
+    if (x in (0, rows - 1)) and (y in (0, cols - 1)):
+        return walls >= 2
+    if x in (0, rows - 1) or y in (0, cols - 1):
+        return walls >= 3
+
+    return False
 
 
 def solve_maze(
@@ -140,7 +192,31 @@ def solve_maze(
     :return:
     """
 
-    pass
+    exits = get_exits(grid)
+
+    if len(exits) < 2:
+        return grid, exits[0] if exits else None
+
+    start, end = exits[0], exits[1]
+
+    if encircled_exit(grid, start) or encircled_exit(grid, end):
+        return grid, None
+
+    for x, row in enumerate(grid):
+        for y, cell in enumerate(row):
+            if cell == "X":
+                grid[x][y] = 0
+
+    grid[start[0]][start[1]] = 1
+
+    k = 1
+    while grid[end[0]][end[1]] == 0:
+        k += 1
+        grid = make_step(grid, k - 1)
+
+    path = shortest_path(grid, end)
+
+    return grid, path
 
 
 def add_path_to_grid(
