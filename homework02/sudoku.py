@@ -55,7 +55,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    return list(grid[pos[0]])
+    return grid[pos[0]]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -67,7 +67,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    return [grid[r][pos[1]] for r in range(len(grid))]
+    return [row[pos[1]] for row in grid]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -84,9 +84,9 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     block_size = int(math.sqrt(n))
     start_row, start_col = (pos[0] // block_size) * block_size, (pos[1] // block_size) * block_size
     block = []
-    for r in range(start_row, start_row + block_size):
-        for c in range(start_col, start_col + block_size):
-            block.append(grid[r][c])
+    for row in range(start_row, start_row + block_size):
+        for col in range(start_col, start_col + block_size):
+            block.append(grid[row][col])
     return block
 
 
@@ -99,7 +99,9 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    empty_positions = [(r, c) for r, row in enumerate(grid) for c, col in enumerate(row) if col == "."]
+    empty_positions = [
+        (row, col) for row, row_value in enumerate(grid) for col, col_value in enumerate(row_value) if col_value == "."
+    ]
     return empty_positions[0] if empty_positions else None
 
 
@@ -156,12 +158,13 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
 
     if any(set(row) != digits for row in solution):
         return False
-    if any({solution[r][c] for r in range(n)} != digits for c in range(n)):
+    if any({solution[row][col] for row in range(n)} != digits for col in range(n)):
         return False
     if any(
-        {solution[r][c] for r in range(br, br + m) for c in range(bc, bc + m)} != digits
-        for br in range(0, n, m)
-        for bc in range(0, n, m)
+        {solution[row][col] for row in range(block_row, block_row + m) for col in range(block_col, block_col + m)}
+        != digits
+        for block_row in range(0, n, m)
+        for block_col in range(0, n, m)
     ):
         return False
     return True
@@ -195,11 +198,10 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
         return grid
 
     grid = copy.deepcopy(solved)
-    cells = [(r, c) for r in range(n) for c in range(n)]
+    cells = [(row, col) for row in range(n) for col in range(n)]
     random.shuffle(cells)
-    for r, c in cells[: n * n - N]:
-        grid[r][c] = "."
-
+    for row, col in cells[: n * n - N]:
+        grid[row][col] = "."
     return grid
 
 
