@@ -191,3 +191,4 @@ if __name__ == "main":
     _, PATH = solve_maze(GRID)
     MAZE = add_path_to_grid(GRID, PATH)
     print(pd.DataFrame(MAZE))
+# .
