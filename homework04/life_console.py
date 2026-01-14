@@ -40,3 +40,6 @@ class Console(UI):
                 curses.napms(100)
         finally:
             curses.endwin()
+
+
+# .
