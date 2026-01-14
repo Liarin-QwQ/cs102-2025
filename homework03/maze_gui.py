@@ -17,11 +17,13 @@ def draw_maze(grid: List[List[Union[str, int]]], size: int = 10):
     for x, row in enumerate(grid):
         for y, cell in enumerate(row):
             if cell == " ":
-                color = "White"
+                color = "white"
             elif cell == "■":
                 color = "black"
-            elif cell == "X":
-                color = "red"
+            elif cell == "X" or cell == "*":  # путь рисуется жёлтым
+                color = "yellow"
+            else:
+                continue
             draw_cell(y, x, color, size)
 
 
@@ -31,15 +33,19 @@ def show_solution():
     if path:
         draw_maze(maze, CELL_SIZE)
     else:
-        tk.messagebox.showinfo("Message", "No solutions")
+        messagebox.showinfo("Message", "No solutions")
 
 
-if __name__ == "__main__":
+if __name__ == "main":
     global GRID, CELL_SIZE
     N, M = 51, 77
 
     CELL_SIZE = 10
     GRID = bin_tree_maze(N, M)
+
+    # гарантируем существование пути
+    GRID[1][1] = " "
+    GRID[N - 2][M - 2] = " "
 
     window = tk.Tk()
     window.title("Maze")
@@ -49,6 +55,3 @@ if __name__ == "__main__":
     canvas.pack()
 
     draw_maze(GRID, CELL_SIZE)
-    ttk.Button(window, text="Solve", command=show_solution).pack(pady=20)
-
-    window.mainloop()

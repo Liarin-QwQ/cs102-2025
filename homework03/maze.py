@@ -111,11 +111,12 @@ def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str,
     for x in range(rows):
         for y in range(cols):
             if grid[x][y] == k:
-                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < rows and 0 <= ny < cols:
-                        if grid[nx][ny] == " " or grid[nx][ny] == 0:
-                            grid[nx][ny] = k + 1
+                for move_x, move_y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    new_x = x + move_x
+                    new_y = y + move_y
+                    if 0 <= new_x < rows and 0 <= new_y < cols:
+                        if grid[new_x][new_y] == " " or grid[new_x][new_y] == 0:
+                            grid[new_x][new_y] = k + 1
     return grid
 
 
@@ -214,16 +215,17 @@ def solve_maze(
 
     grid[start[0]][start[1]] = 1
 
-    k = 1
-    while True:
+    max_steps = len(grid) * len(grid[0])
+    step = 1
+    while step <= max_steps:
         end_cell = grid[end[0]][end[1]]
 
         if isinstance(end_cell, int) and end_cell > 0:
             break
 
         prev = deepcopy(grid)
-        k += 1
-        grid = make_step(grid, k - 1)
+        grid = make_step(grid, step)
+        step += 1
 
         if grid == prev:
             return grid, None
