@@ -160,7 +160,7 @@ def shortest_path(
 
 def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> bool:
     """
-    Проверяет доступностть выхода
+    Проверяет доступность выхода
     """
     """
     :param grid:
