@@ -106,6 +106,7 @@ class GameOfLife:
 
                 ny = y + dy
                 nx = x + dx
+        return neighbours
 
     def get_next_generation(self) -> Grid:
         """
