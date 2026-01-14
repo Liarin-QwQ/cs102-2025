@@ -2,7 +2,6 @@ import pathlib
 import random
 import typing as tp
 
-
 Cell = tp.Tuple[int, int]
 Cells = tp.List[int]
 Grid = tp.List[Cells]
@@ -89,6 +88,8 @@ class GameOfLife:
 
     @property
     def is_max_generations_exceeded(self) -> bool:
+        if self.max_generations is None:
+            return False
         return self.generations >= self.max_generations
 
     @property

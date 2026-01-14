@@ -5,15 +5,15 @@ from ui import UI
 
 
 class Console(UI):
-    def init(self, life: GameOfLife) -> None:
-        super().init(life)
+    def __init__(self, life: GameOfLife) -> None:
+        super().__init__(life)
 
     def draw_borders(self, screen) -> None:
-        """ Отобразить рамку. """
+        """Отобразить рамку."""
         screen.border()
 
     def draw_grid(self, screen) -> None:
-        """ Отобразить состояние клеток. """
+        """Отобразить состояние клеток."""
         for y in range(self.life.rows):
             for x in range(self.life.cols):
                 cell = self.life.curr_generation[y][x]
