@@ -107,11 +107,6 @@ class GameOfLife:
                 ny = y + dy
                 nx = x + dx
 
-                if 0 <= ny < self.cell_height and 0 <= nx < self.cell_width:
-                    neighbours.append(self.grid[ny][nx])
-
-        return neighbours
-
     def get_next_generation(self) -> Grid:
         """
         Получить следующее поколение клеток.
